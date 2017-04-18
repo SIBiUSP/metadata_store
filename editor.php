@@ -18,15 +18,13 @@
                 if (isset($_POST["_id"])) {
                     $id = $_POST["_id"];
                     unset($_POST["_id"]);
-                    $result = $collection->updateOne(['_id' => new MongoDB\BSON\ObjectID( $id )], [ '$set' => $_POST ], ["upsert"=>true] );
-                    print_r($_POST);
-                    echo "<br/><br/>";
-                    print_r($result);
+                    
+                    $result = $collection->updateOne(array('_id' => new MongoDB\BSON\ObjectID( $id )), array('$set' => $_POST) );
+                    var_dump($result);
                     $item = (array)$collection->findOne(['_id' => new MongoDB\BSON\ObjectID( $id )]);
                 } else {
-                    echo "criado";
                     $result = $collection->insertOne( [ $_POST ] );                        
-                    echo "Inserted with Object ID '{$result->getInsertedId()}'";                
+                    echo "Documento inserido com o Object ID '{$result->getInsertedId()}'";                
                     $item = (array)$collection->findOne(['_id' => new MongoDB\BSON\ObjectID( $result->getInsertedId() )]);                    
                     
                 }
