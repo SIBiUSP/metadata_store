@@ -15,14 +15,14 @@
 
 
                 foreach ($result as $entry) {
-                    echo $entry['_id'], ': ', $entry['titulo'], ': ', $entry['ano'],"<br/>";
+                    
+                    echo ''.$entry['_id'].': '.$entry[0]['title'].' - '.$entry[0]['year'].' - <a href="editor.php?tarefa=edit&id='.$entry['_id'].'">Editar</a> - <a href="editor.php?tarefa=delete&id='.$entry['_id'].'">Excluir</a><br/>';
+                    
                 }        
 
             ?>
 
-            <p><a href="editor.php?tarefa=novo">Novo registro</a></p>
-            <p><a href="editor.php?tarefa=editar&id=999999999">Editar registro</a></p>
-            <p><a href="editor.php?tarefa=excluir&id=999999999">Excluir registro</a></p>
+            <p><a href="editor.php?tarefa=new">Novo registro</a></p>
         </div>    
     
     </body>
