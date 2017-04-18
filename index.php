@@ -16,7 +16,7 @@
 
                 foreach ($result as $entry) {
                     
-                    echo ''.$entry['_id'].': '.$entry[0]['title'].' - '.$entry[0]['year'].' - <a href="editor.php?tarefa=edit&id='.$entry['_id'].'">Editar</a> - <a href="editor.php?tarefa=delete&id='.$entry['_id'].'">Excluir</a><br/>';
+                    echo ''.$entry['_id'].': '.$entry['title'].' - '.$entry['year'].' - <a href="editor.php?tarefa=edit&id='.$entry['_id'].'">Editar</a> - <a href="editor.php?tarefa=delete&id='.$entry['_id'].'">Excluir</a><br/>';
                     
                 }        
 

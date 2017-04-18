@@ -17,15 +17,18 @@
                 
                 if (isset($_POST["_id"])) {
                     $id = $_POST["_id"];
-                    unset($_POST["_id"]);
-                    
-                    $result = $collection->updateOne(array('_id' => new MongoDB\BSON\ObjectID( $id )), array('$set' => $_POST) );
-                    var_dump($result);
-                    $item = (array)$collection->findOne(['_id' => new MongoDB\BSON\ObjectID( $id )]);
+                    unset($_POST["_id"]);                    
+                    $result = $collection->updateOne(array('_id' => $id ), array('$set' => $_POST), array('upsert'=>true) );
+                    echo 'Documento editado com sucesso';
+                    //var_dump($result);
+                    $item = (array)$collection->findOne(['_id' => $id ]);
                 } else {
-                    $result = $collection->insertOne( [ $_POST ] );                        
-                    echo "Documento inserido com o Object ID '{$result->getInsertedId()}'";                
-                    $item = (array)$collection->findOne(['_id' => new MongoDB\BSON\ObjectID( $result->getInsertedId() )]);                    
+                    $sha256 =  hash('sha256', ''.$_POST["title"].'');
+                    $_POST["_id"] = $sha256;                    
+                    //$result = $collection->insertOne( [ $_POST ] );
+                    $result = $collection->updateOne(array('_id' => $sha256 ), array('$set' => $_POST), array('upsert'=>true) );
+                    echo "Documento inserido com o ID '.$sha256.'";                
+                    $item = (array)$collection->findOne(['_id' => $sha256 ]);                    
                     
                 }
 
@@ -36,10 +39,10 @@
                     case "new":                        
                         break;
                     case "edit":
-                        $item = (array)$collection->findOne(['_id' => new MongoDB\BSON\ObjectID( $_GET["id"] )]);
+                        $item = (array)$collection->findOne(['_id' => $_GET["id"] ]);
                         break;
                     case "delete":
-                        $delete = $collection->deleteOne(['_id' => new MongoDB\BSON\ObjectID( $_GET["id"] )]);
+                        $delete = $collection->deleteOne(['_id' => $_GET["id"] ]);
                         echo "Documento excluído!";
                         break;
                 }
@@ -53,8 +56,8 @@
             <fieldset class="uk-fieldset">
                 <legend class="uk-legend">Editar metadados</legend>
                 <?php if (isset($item["_id"])): ?>
-                    <?php $id = (array)$item["_id"]; ?>                
-                    <input type="hidden" name="_id" value="<?php echo $id["oid"]; ?>">
+                    <?php $id = $item["_id"]; ?>                
+                    <input type="hidden" name="_id" value="<?php echo $item["_id"]; ?>">
                 <?php endif; ?>
                 <div class="uk-margin">
                     <label class="uk-form-label" for="form-horizontal-text">Título</label>
@@ -63,7 +66,7 @@
                             <?php if ($_GET["tarefa"] == "new" || $_GET["tarefa"] == "delete") :?>
                                 <textarea class="uk-textarea" name="title"></textarea>
                             <?php else: ?>
-                                <textarea class="uk-textarea" name="title"><?php echo $item[0]["title"]; ?></textarea>
+                                <textarea class="uk-textarea" name="title"><?php echo $item["title"]; ?></textarea>
                             <?php endif; ?>
                     </div>    
                 </div>
@@ -73,7 +76,7 @@
                         <?php if ($_GET["tarefa"] == "new" || $_GET["tarefa"] == "delete") :?>
                             <textarea class="uk-textarea" name="year"></textarea>
                         <?php else: ?>
-                            <textarea class="uk-textarea" name="year"><?php echo $item[0]["year"]; ?></textarea>
+                            <textarea class="uk-textarea" name="year"><?php echo $item["year"]; ?></textarea>
                         <?php endif; ?>
                         
                     </div>    
