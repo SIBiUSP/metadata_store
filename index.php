@@ -5,7 +5,7 @@
             include 'inc/config.php';
             include 'inc/meta-header.php';
         ?>        
-        <title>Módulo de Metadados</title>
+            <title>Módulo de Metadados</title>
     </head>
     <body>
         <div class="uk-container">        
@@ -16,7 +16,7 @@
 
                 foreach ($result as $entry) {
                     
-                    echo ''.$entry['_id'].': '.$entry['title'].' - '.$entry['year'].' - <a href="editor.php?tarefa=edit&id='.$entry['_id'].'">Editar</a> - <a href="editor.php?tarefa=delete&id='.$entry['_id'].'">Excluir</a><br/>';
+                    echo ''.$entry['_id'].': '.$entry['name'].' - '.$entry['datePublished'].' - <a href="editor.php?tarefa=edit&id='.$entry['_id'].'">Editar</a> - <a href="editor.php?tarefa=delete&id='.$entry['_id'].'">Excluir</a><br/>';
                     
                 }        
 

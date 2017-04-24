@@ -19,11 +19,15 @@
                     $id = $_POST["_id"];
                     unset($_POST["_id"]);                    
                     $result = $collection->updateOne(array('_id' => $id ), array('$set' => $_POST), array('upsert'=>true) );
-                    echo 'Documento editado com sucesso';
-                    //var_dump($result);
+                    
+                    echo '<div class="uk-alert-success" uk-alert>
+                            <a class="uk-alert-close" uk-close></a>
+                            <p>Documento editado com sucesso.</p>
+                          </div>';
+
                     $item = (array)$collection->findOne(['_id' => $id ]);
                 } else {
-                    $sha256 =  hash('sha256', ''.$_POST["title"].'');
+                    $sha256 =  hash('sha256', ''.$_POST["name"].'');
                     $_POST["_id"] = $sha256;                    
                     //$result = $collection->insertOne( [ $_POST ] );
                     $result = $collection->updateOne(array('_id' => $sha256 ), array('$set' => $_POST), array('upsert'=>true) );
@@ -43,8 +47,11 @@
                         break;
                     case "delete":
                         $delete = $collection->deleteOne(['_id' => $_GET["id"] ]);
-                        echo "Documento excluído!";
-                        break;
+                    echo '<div class="uk-alert-danger" uk-alert>
+                            <a class="uk-alert-close" uk-close></a>
+                            <p>Documento excluído!</p>
+                          </div>';
+                    break;
                 }
             }
 
@@ -64,19 +71,19 @@
                     <div class="uk-form-controls">
                         <?php if (!isset($_GET["tarefa"])) {$_GET["tarefa"] = "";} ?>
                             <?php if ($_GET["tarefa"] == "new" || $_GET["tarefa"] == "delete") :?>
-                                <textarea class="uk-textarea" name="title"></textarea>
+                                <textarea class="uk-textarea" name="name"></textarea>
                             <?php else: ?>
-                                <textarea class="uk-textarea" name="title"><?php echo $item["title"]; ?></textarea>
+                                <textarea class="uk-textarea" name="name"><?php echo $item["name"]; ?></textarea>
                             <?php endif; ?>
                     </div>    
                 </div>
                 <div class="uk-margin">
-                    <label class="uk-form-label" for="form-horizontal-text">Ano</label>
+                    <label class="uk-form-label" for="form-horizontal-text">Data de publicação (AAAA)</label>
                     <div class="uk-form-controls">
                         <?php if ($_GET["tarefa"] == "new" || $_GET["tarefa"] == "delete") :?>
-                            <textarea class="uk-textarea" name="year"></textarea>
+                            <input data-validation="date" data-validation-format="yyyy" type="text" name="datePublished">
                         <?php else: ?>
-                            <textarea class="uk-textarea" name="year"><?php echo $item["year"]; ?></textarea>
+                            <input data-validation="date" data-validation-format="yyyy" type="text" name="datePublished" value="<?php echo $item["datePublished"]; ?>">
                         <?php endif; ?>
                         
                     </div>    
@@ -85,10 +92,16 @@
             <button class="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom">Salvar</button>
         </form>    
         <form>
-            <input type="hidden" name="id" value="<?php echo $id["oid"]; ?>">
+            <input type="hidden" name="id" value="<?php echo $item["_id"]; ?>">
             <input type="hidden" name="tarefa" value="delete">
             <button class="uk-button uk-button-danger">Excluir registro</button>
         </form>    
-        </div> 
+        </div>
+        <script>
+            $.validate({
+              lang : 'pt',
+              modules : 'date'
+            });
+         </script>
     </body>
 </html>    
