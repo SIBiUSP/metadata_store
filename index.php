@@ -24,7 +24,7 @@
 
             <p><a href="editor.php?tarefa=new">Novo registro</a></p>
         </div>    
-    
     </body>
+
 
 </html>     

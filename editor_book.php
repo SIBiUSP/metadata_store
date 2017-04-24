@@ -9,7 +9,14 @@
 	</head>	
 	<body>
 		<div class="uk-container uk-container-center">
-			<?php form::read_json(); ?>
+			<form class="uk-form-horizontal uk-margin-large" method="post" action="editor.php">
+				<?php form::read_json(); ?>
+			</form>	
 		</div>
-	</body>
+		<script>
+		  $.validate({
+			lang: 'pt'
+		  });
+		</script>	
+	</body>	
 </html>

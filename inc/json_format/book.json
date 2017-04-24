@@ -4,20 +4,20 @@
         "htmlform": "text.php",
         "placeholder": "Título",
         "repetitive": false,
-        "obrigatorio": true
+        "required": true
     },	
     "datePublished": {
 		"name": "datePublished",
         "htmlform": "date.php",
         "placeholder": "Data de publicação",
         "repetitive": false,
-        "obrigatorio": true
+        "required": true
     },
     "description": {
 		"name": "description",
         "htmlform": "textarea.php",
         "placeholder": "Resumo",
         "repetitive": false,
-        "obrigatorio": true
+        "required": false
     }	
 }
