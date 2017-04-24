@@ -5,7 +5,7 @@
 			include 'inc/functions.php';
 			include 'inc/meta-header.php'; 
 		?>
-		<title>Editor</title>	
+		<title>Editor de metadados</title>	
 	</head>	
 	<body>
 		<div class="uk-container uk-container-center">
