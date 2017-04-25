@@ -4,3 +4,4 @@ composer.phar
 inc/config.php
 mongo-connector.log
 oplog.timestamp
+.vscode/
