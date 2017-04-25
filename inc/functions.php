@@ -17,10 +17,8 @@
 				$validator = 'data-validation="required"';
 			} else {
 				$validator = '';
-			}
-				
-			include 'inc/forms_html/'.$value["htmlform"].'';			
-			
+			}				
+			include 'inc/forms_html/'.$value["htmlform"].'';						
 		}
 		
 	}
