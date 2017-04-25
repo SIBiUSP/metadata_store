@@ -26,7 +26,7 @@
 		</script>		
 		<script type="text/javascript">
 			$(document).ready(function() {
-				var max_fields      = 100; //maximum input boxes allowed
+				var max_fields      = 3; //maximum input boxes allowed
 				var wrapper         = $(".input_fields_wrap"); //Fields wrapper
 				var add_button      = $(".add_field_button"); //Add button ID
 				var x = 1; //initlal text box count
@@ -38,6 +38,7 @@
 						var copyElement =  this.nextElementSibling;
 						var parentElement =  copyElement.parentElement;
 						var newdiv = document.createElement('div');
+						newdiv.className += "input_fields_wrap";
 						newdiv.innerHTML = copyElement.innerHTML;
 						parentElement.append(newdiv); //add input box
 					}
