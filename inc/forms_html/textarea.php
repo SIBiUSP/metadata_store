@@ -1,16 +1,18 @@
 <?php
     echo '
-		<div class="input_fields_wrap" id="'.$name.'">
-			<fieldset class="uk-fieldset">
-				<legend class="uk-legend">'.$placeholder.'</legend>
-				<div class="uk-margin">
-					<textarea class="uk-textarea" rows="5" name="'.$name.'" placeholder="'.$placeholder.'" '.$validator.'></textarea>
-				</div>
-			</fieldset>';
-			if ($value["repetitive"] == true) {
-				echo '<button class="add_field_button">+</button>';
-			}
-			echo '<a href="#" class="remove_field">Remover</a>	
-		</div>
+		 <div>
+			<div>
+				<fieldset class="uk-fieldset">
+					<legend class="uk-legend">'.$placeholder.'</legend>
+					<div class="uk-margin">
+						<textarea class="uk-textarea" rows="5" name="'.$name.'" placeholder="'.$placeholder.'" '.$validator.'></textarea>
+					</div>
+				</fieldset>';
+				if ($value["repetitive"] == true) {
+					echo '<a href="#" class="add_field_button">+</a>';
+				}
+				echo '<a href="#" class="remove_field">Remover</a>	
+			</div>
+		</div>		
 	';
 ?>
