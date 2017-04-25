@@ -33,8 +33,9 @@
 				$(add_button).click(function(e){ //on add input button click
 					e.preventDefault();
 					if(x < max_fields){ //max input box allowed
-						x++; //text box increment						
-						var copyElement =  this.parentElement;
+						x++; //text box increment
+						console.log(this.nextElementSibling);						
+						var copyElement =  this.nextElementSibling;
 						var parentElement =  copyElement.parentElement;
 						var newdiv = document.createElement('div');
 						newdiv.innerHTML = copyElement.innerHTML;

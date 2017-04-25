@@ -1,6 +1,7 @@
 <?php
     echo '
 		 <div>
+		 	<a href="#" class="add_field_button">+</a>
 			<div>
 				<fieldset class="uk-fieldset">
 					<legend class="uk-legend">'.$placeholder.'</legend>
@@ -9,7 +10,7 @@
 					</div>
 				</fieldset>';
 				if ($value["repetitive"] == true) {
-					echo '<a href="#" class="add_field_button">+</a>';
+					echo '';
 				}
 				echo '<a href="#" class="remove_field">Remover</a>	
 			</div>
