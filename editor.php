@@ -1,107 +1,149 @@
 <!DOCTYPE html>
 <html lang="pt-br" dir="ltr">
     <head>
-        <?php 
-            include 'inc/config.php';
-            include 'inc/meta-header.php';
-        ?>             
-        <title>Editor de Metadados</title>
+    <?php 
+        include 'inc/config.php';
+        include 'inc/meta-header.php';
+       
+        switch ($_GET["task"]) {
+            case "new":                        
+                break;
+            case "edit":
+                $item = (array)$collection->findOne(['_id' => $_GET["id"] ]);
+                break;
+            case "delete":
+                $delete = $collection->deleteOne(['_id' => $_GET["id"] ]);
+                echo '<div class="uk-alert-danger" uk-alert>
+                <a class="uk-alert-close" uk-close></a>
+                <p>Documento excluído!</p>
+                </div>';
+                break;
+        }
+    ?>             
+    <title>Editor de Metadados</title>
     </head>
     <body>
-        <a href="index.php">Voltar ao início</a>
-        <div class="uk-container">  
+    <div class="uk-container">
+        <nav class="uk-navbar-container" uk-navbar>
+            <div class="uk-navbar-left">
+                <ul class="uk-navbar-nav">
+                    <li class="uk-active"><a href="index.php">Voltar ao início</a></li>
+                </ul>
+            </div>
+        </nav>
+        <h2>Editor de metadados</h2>
+        <div class="uk-grid-small uk-grid" uk-grid="">         
 
-            <?php            
-            
-            if (!empty($_POST)) {
-                
-                if (isset($_POST["_id"])) {
-                    $id = $_POST["_id"];
-                    unset($_POST["_id"]);                    
-                    $result = $collection->updateOne(array('_id' => $id ), array('$set' => $_POST), array('upsert'=>true) );
-                    
-                    echo '<div class="uk-alert-success" uk-alert>
-                            <a class="uk-alert-close" uk-close></a>
-                            <p>Documento editado com sucesso.</p>
-                          </div>';
-
-                    $item = (array)$collection->findOne(['_id' => $id ]);
-                } else {
-                    $sha256 =  hash('sha256', ''.$_POST["name"].'');
-                    $_POST["_id"] = $sha256;                    
-                    //$result = $collection->insertOne( [ $_POST ] );
-                    $result = $collection->updateOne(array('_id' => $sha256 ), array('$set' => $_POST), array('upsert'=>true) );
-                    echo "Documento inserido com o ID '.$sha256.'";                
-                    $item = (array)$collection->findOne(['_id' => $sha256 ]);                    
-                    
-                }
-
-                
-            } else {
         
-                switch ($_GET["tarefa"]) {
-                    case "new":                        
-                        break;
-                    case "edit":
-                        $item = (array)$collection->findOne(['_id' => $_GET["id"] ]);
-                        break;
-                    case "delete":
-                        $delete = $collection->deleteOne(['_id' => $_GET["id"] ]);
-                    echo '<div class="uk-alert-danger" uk-alert>
-                            <a class="uk-alert-close" uk-close></a>
-                            <p>Documento excluído!</p>
-                          </div>';
-                    break;
-                }
-            }
-
-            ?>
-<h2>Editor de metadados</h2>
 
 
-        <form class="uk-form-horizontal uk-margin-large" method="post" action="editor.php">
+    <?php if(empty($_GET["type"])) : ?>
+
+        <form class="uk-form-horizontal uk-margin-large" method="get" action="editor.php">
             <fieldset class="uk-fieldset">
-                <legend class="uk-legend">Editar metadados</legend>
-                <?php if (isset($item["_id"])): ?>
-                    <?php $id = $item["_id"]; ?>                
-                    <input type="hidden" name="_id" value="<?php echo $item["_id"]; ?>">
-                <?php endif; ?>
+                <legend class="uk-legend">Selecionar tipo de documento</legend>
+                <input type="hidden" name="task" value="new">
                 <div class="uk-margin">
-                    <label class="uk-form-label" for="form-horizontal-text">Título</label>
-                    <div class="uk-form-controls">
-                        <?php if (!isset($_GET["tarefa"])) {$_GET["tarefa"] = "";} ?>
-                            <?php if ($_GET["tarefa"] == "new" || $_GET["tarefa"] == "delete") :?>
-                                <textarea class="uk-textarea" name="name"></textarea>
-                            <?php else: ?>
-                                <textarea class="uk-textarea" name="name"><?php echo $item["name"]; ?></textarea>
-                            <?php endif; ?>
-                    </div>    
-                </div>
-                <div class="uk-margin">
-                    <label class="uk-form-label" for="form-horizontal-text">Data de publicação (AAAA)</label>
-                    <div class="uk-form-controls">
-                        <?php if ($_GET["tarefa"] == "new" || $_GET["tarefa"] == "delete") :?>
-                            <input data-validation="date" data-validation-format="yyyy" type="text" name="datePublished">
-                        <?php else: ?>
-                            <input data-validation="date" data-validation-format="yyyy" type="text" name="datePublished" value="<?php echo $item["datePublished"]; ?>">
-                        <?php endif; ?>
-                        
-                    </div>    
+                    <select class="uk-select" name="type">
+                        <option value="article">Artigo de periódico</option>
+                        <option value="book">Livro</option>
+                    </select>
                 </div>    
+                <button class="uk-button">Selecionar</button>
             </fieldset>
-            <button class="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom">Salvar</button>
-        </form>    
-        <form>
-            <input type="hidden" name="id" value="<?php echo $item["_id"]; ?>">
-            <input type="hidden" name="tarefa" value="delete">
-            <button class="uk-button uk-button-danger">Excluir registro</button>
-        </form>    
+        </form> 
+
+    <?php else : ?>
+
+        <?php if($_GET["type"] == "article") : ?>
+
+        <div class="uk-width-3-4@s"> 
+
+            <form class="uk-form-horizontal uk-margin-large" method="post" action="updatedb.php">
+                <fieldset class="uk-fieldset">
+                    <legend class="uk-legend">Dados da obra</legend>
+                    <?php if (isset($item["_id"])): ?>
+                        <?php $id = $item["_id"]; ?>                
+                        <input type="hidden" name="_id" value="<?php echo $item["_id"]; ?>">
+                    <?php endif; ?>        
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="form-horizontal-text">Título</label>
+                        <div class="uk-form-controls">
+                            <textarea class="uk-textarea" name="name"></textarea>
+                        </div>
+                    </div>
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="form-horizontal-text">Data de publicação (AAAA)</label>
+                        <div class="uk-form-controls">
+                            <input class="uk-input" data-validation="date" data-validation-format="yyyy" type="text" name="datePublished">
+                        </div>    
+                    </div>
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="form-horizontal-text">Idioma</label>
+                        <div class="uk-form-controls">
+                        <select class="uk-select" name="language">
+                            <option value="Português">Português</option>
+                            <option value="Inglês">Inglês</option>
+                        </select> 
+                        </div>    
+                    </div>                          
+                </fieldset>
+                </a><a name="imprenta"></a>
+                <fieldset class="uk-fieldset">
+                    <legend class="uk-legend">Dados da publicação fonte</legend>
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="form-horizontal-text">Título da publicação</label>
+                        <div class="uk-form-controls">
+                            <input class="uk-input" id="form-horizontal-text" type="text" name="isPartOf.name">
+                        </div>
+                    </div>
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="form-horizontal-text">Editora</label>
+                        <div class="uk-form-controls">
+                            <input class="uk-input" id="form-horizontal-text" type="text" name="publisher">
+                        </div>
+                    </div> 
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="form-horizontal-text">Local de publicação</label>
+                        <div class="uk-form-controls">
+                            <input class="uk-input" id="form-horizontal-text" type="text" name="publisher.organization.location">
+                        </div>
+                    </div>
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="form-horizontal-text">ISSN</label>
+                        <div class="uk-form-controls">
+                            <input class="uk-input" id="form-horizontal-text" type="text" name="issn">
+                        </div>
+                    </div>                                                                               
+                </fieldset>
+                <button class="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom">Salvar</button>
+            </form>
         </div>
-        <script>
-            $.validate({
-              lang : 'pt',
-              modules : 'date'
-            });
-         </script>
-    </body>
-</html>    
+        <div class="uk-width-1-4@s">
+            <p><a class="uk-button uk-button-primary" href="#imprenta" uk-scroll>Scroll down</a></p>
+        </div>            
+        <?php endif; ?>
+
+<?php endif; ?>
+
+<?php if($_GET["task"] == "delete") : ?>
+    <form>
+        <input type="hidden" name="id" value="<?php echo $item["_id"]; ?>">
+        <input type="hidden" name="task" value="delete">
+        <button class="uk-button uk-button-danger">Excluir registro</button>
+    </form>    
+    </div>
+<?php endif; ?>
+
+
+</div>
+
+
+<script>
+    $.validate({
+    lang : 'pt',
+    modules : 'date'
+    });
+</script> 
+</body>
+</html>

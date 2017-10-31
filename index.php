@@ -12,17 +12,13 @@
             <?php 
 
                 $result = $collection->find( [ ] );
-
-
-                foreach ($result as $entry) {
-                    
-                    echo ''.$entry['_id'].': '.$entry['name'].' - '.$entry['datePublished'].' - <a href="editor.php?tarefa=edit&id='.$entry['_id'].'">Editar</a> - <a href="editor.php?tarefa=delete&id='.$entry['_id'].'">Excluir</a><br/>';
-                    
+                foreach ($result as $entry) {                    
+                    echo ''.$entry['_id'].': '.$entry['name'].' - '.$entry['datePublished'].' - <a href="editor.php?task=edit&id='.$entry['_id'].'">Editar</a> - <a href="editor.php?task=delete&id='.$entry['_id'].'">Excluir</a><br/>';
                 }        
 
             ?>
 
-            <p><a href="editor.php?tarefa=new">Novo registro</a></p>
+            <p><a href="editor.php?task=new">Novo registro</a></p>
         </div>    
     </body>
 
